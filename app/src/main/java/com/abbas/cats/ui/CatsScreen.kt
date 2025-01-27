@@ -29,6 +29,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import coil3.request.ImageRequest
 import coil3.compose.AsyncImage
 import coil3.request.crossfade
@@ -39,6 +40,7 @@ import com.abbas.cats.usecase.presentationmodel.Cat
 @Composable
 fun CatsScreen(
     modifier: Modifier = Modifier,
+    navController: NavHostController
 ) {
 
     val viewModel = hiltViewModel<MainViewModel>()
@@ -51,8 +53,9 @@ fun CatsScreen(
             CatsLazyColumn(
                 cats = (data as Result.Success).data,
                 listState = listState
-            ) {
-
+            ) { it ->
+                viewModel.clickOnCatItem(cat = it)
+                navController.navigate("detail")
             }
         }
 
@@ -82,7 +85,7 @@ fun CatsLazyColumn(
     modifier: Modifier = Modifier,
     cats: List<Cat>,
     listState: LazyListState,
-    onItemClick: () -> Unit
+    onItemClick: (Cat) -> Unit
 ) {
     LazyColumn(
         contentPadding = PaddingValues(vertical = 16.dp),
@@ -91,7 +94,7 @@ fun CatsLazyColumn(
     ) {
         items(cats, key = { cat -> cat.id }) { cat ->
             CatItemCard(cat = cat) {
-                onItemClick()
+                onItemClick(cat)
             }
         }
     }
