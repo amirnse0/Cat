@@ -18,8 +18,22 @@ class MainViewModel @Inject constructor(
         const val LIMIT = 20
         const val CONTAINS_BREED = true
     }
+
+    init {
+        getCats(1)
+    }
+
     private val _catsDataStateFlow: MutableStateFlow<Result<List<Cat>>> = MutableStateFlow(Result.Loading)
     val catsDataStateFlow = _catsDataStateFlow
+
+    private val _catSelectedItemStateFlow: MutableStateFlow<Cat?> = MutableStateFlow(null)
+    val catSelectedItemStateFlow = _catSelectedItemStateFlow
+
+    fun clickOnCatItem(cat: Cat) {
+        viewModelScope.launch {
+            _catSelectedItemStateFlow.emit(cat)
+        }
+    }
 
     fun getCats(page: Int) {
         viewModelScope.launch {
