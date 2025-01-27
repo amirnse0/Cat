@@ -12,6 +12,6 @@ interface CatFavoriteDao {
     suspend fun insertNewItem(favoriteItem: FavoriteItem)
 
     @Query("SELECT * FROM favorite_item")
-    fun getAllFavoriteItems(): Flow<FavoriteItem>
+    fun getAllFavoriteItems(): Flow<List<FavoriteItem>>
 
 }
