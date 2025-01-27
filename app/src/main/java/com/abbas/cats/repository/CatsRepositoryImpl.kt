@@ -1,7 +1,7 @@
 package com.abbas.cats.repository
 
-import com.abbas.cats.data.CatsRemoteDataSource
-import com.abbas.cats.data.model.CatResponse
+import com.abbas.cats.data.remote.CatsRemoteDataSource
+import com.abbas.cats.data.remote.model.CatResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

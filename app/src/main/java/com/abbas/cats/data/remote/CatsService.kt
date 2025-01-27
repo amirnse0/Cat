@@ -1,6 +1,6 @@
-package com.abbas.cats.data
+package com.abbas.cats.data.remote
 
-import com.abbas.cats.data.model.CatResponse
+import com.abbas.cats.data.remote.model.CatResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

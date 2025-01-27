@@ -1,7 +1,7 @@
 package com.abbas.cats.di
 
-import com.abbas.cats.data.CatsRemoteDataSource
-import com.abbas.cats.data.CatsRemoteDataSourceImpl
+import com.abbas.cats.data.remote.CatsRemoteDataSource
+import com.abbas.cats.data.remote.CatsRemoteDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

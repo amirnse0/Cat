@@ -1,6 +1,6 @@
 package com.abbas.cats.di
 
-import com.abbas.cats.data.CatsService
+import com.abbas.cats.data.remote.CatsService
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides

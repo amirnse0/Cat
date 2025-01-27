@@ -1,6 +1,6 @@
 package com.abbas.cats.usecase.converter
 
-import com.abbas.cats.data.model.CatResponse
+import com.abbas.cats.data.remote.model.CatResponse
 import com.abbas.cats.usecase.presentationmodel.Cat
 
 

@@ -1,6 +1,6 @@
-package com.abbas.cats.data
+package com.abbas.cats.data.remote
 
-import com.abbas.cats.data.model.CatResponse
+import com.abbas.cats.data.remote.model.CatResponse
 
 interface CatsRemoteDataSource {
     suspend fun getCats(

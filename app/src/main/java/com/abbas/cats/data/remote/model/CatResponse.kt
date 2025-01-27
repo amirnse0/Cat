@@ -1,4 +1,4 @@
-package com.abbas.cats.data.model
+package com.abbas.cats.data.remote.model
 
 data class CatResponse(
     val breeds: List<BreedResponse>,

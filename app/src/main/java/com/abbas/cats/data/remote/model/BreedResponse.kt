@@ -1,4 +1,4 @@
-package com.abbas.cats.data.model
+package com.abbas.cats.data.remote.model
 
 import com.google.gson.annotations.SerializedName as SI
 
