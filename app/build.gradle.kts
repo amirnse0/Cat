@@ -80,6 +80,10 @@ dependencies {
 
     //navigation
     implementation(libs.androidx.hilt.navigation.compose)
+
+    //room
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
 }
 
 hilt {
