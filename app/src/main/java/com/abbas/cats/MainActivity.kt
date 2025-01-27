@@ -17,6 +17,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.abbas.cats.data.model.CatResponse
 import com.abbas.cats.ui.MainViewModel
 import com.abbas.cats.ui.theme.CatsTheme
+import com.abbas.cats.usecase.Result
+import com.abbas.cats.usecase.presentationmodel.Cat
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -25,7 +27,7 @@ class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.getCats()
+        viewModel.getCats(1)
         enableEdgeToEdge()
         setContent {
             CatsTheme {
@@ -43,9 +45,10 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier, viewModel: MainViewModel) {
-    val data: List<CatResponse> by viewModel.catsDataStateFlow.collectAsStateWithLifecycle()
+    val data: Result<List<Cat>> by viewModel.catsDataStateFlow.collectAsStateWithLifecycle()
+    if (data is Result.Success)
     Text(
-        text = data.toString(),
+        text = (data as Result.Success).data.toString(),
         modifier = modifier
     )
 }
