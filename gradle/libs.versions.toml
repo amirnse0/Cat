@@ -17,6 +17,7 @@ hilt = "2.47"
 ksp = "2.1.0-1.0.29"
 coil = "2.7.0"
 coil3 = "3.0.4"
+hiltNavigationCompose = "1.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -45,6 +46,7 @@ coil = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
 coil-svg = { group = "io.coil-kt", name = "coil-svg", version.ref = "coil" }
 coil3 = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil3" }
 coil3-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil3" }
+androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
