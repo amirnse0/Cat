@@ -4,8 +4,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,6 +19,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -24,6 +27,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.request.ImageRequest
 import coil3.compose.AsyncImage
 import coil3.request.crossfade
@@ -32,9 +37,15 @@ import com.abbas.cats.usecase.Result
 import com.abbas.cats.usecase.presentationmodel.Cat
 
 @Composable
-fun CatsScreen(modifier: Modifier = Modifier, data: Result<List<Cat>>) {
+fun CatsScreen(
+    modifier: Modifier = Modifier,
+) {
+
+    val viewModel = hiltViewModel<MainViewModel>()
+    val data by viewModel.catsDataStateFlow.collectAsStateWithLifecycle()
 
     val listState = rememberLazyListState()
+
     when (data) {
         is Result.Success -> {
             CatsLazyColumn(
@@ -46,7 +57,13 @@ fun CatsScreen(modifier: Modifier = Modifier, data: Result<List<Cat>>) {
         }
 
         Result.Loading -> {
-            LinearProgressIndicator()
+            LinearProgressIndicator(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .wrapContentWidth(Alignment.CenterHorizontally)
+                    .height(5.dp)
+                    .width(400.dp)
+            )
         }
 
         else -> {
