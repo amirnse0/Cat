@@ -2,7 +2,13 @@ package com.abbas.cats.data.model
 
 import com.google.gson.annotations.SerializedName as SI
 
-data class Breed(
+/**
+ * This is a big model we can remove any field that we do not need.
+ * But if we need that field in the future we must generate this class
+ * again, so we keep them all and define a converter class.
+ * @see com.abbas.cats.usecase.converter.CatConverter
+ */
+data class BreedResponse(
     @SI("adaptability")
     val adaptability: Int,
     @SI("affection_level")
