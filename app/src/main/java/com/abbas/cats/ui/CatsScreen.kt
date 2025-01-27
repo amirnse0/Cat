@@ -121,13 +121,13 @@ fun CatItemCard(modifier: Modifier = Modifier, cat: Cat, onItemClick: () -> Unit
 }
 
 @Composable
-fun CatPicture(modifier: Modifier = Modifier, image: String) {
+fun CatPicture(modifier: Modifier = Modifier, image: String, pictureSize: Int = 200) {
     val context = LocalContext.current
 
     AsyncImage(
         modifier = modifier
             .fillMaxWidth()
-            .size(200.dp),
+            .size(pictureSize.dp),
         model = ImageRequest.Builder(context)
             .data(image)
             .crossfade(true)

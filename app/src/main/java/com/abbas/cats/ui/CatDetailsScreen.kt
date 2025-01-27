@@ -12,7 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 
@@ -37,12 +39,18 @@ fun CatDetailsScreen(
                 .fillMaxWidth()
                 .padding(10.dp)
         ) {
-            CatPicture(image = cat!!.image)
-            Text(text = cat!!.name)
-            Text(text = cat!!.description)
-            Text(text = "Origin: ${cat!!.origin}")
-            Text(text = "Life span: ${cat!!.lifeSpan}")
-            Text(text = "Temperament: ${cat!!.temperament}")
+            CatPicture(image = cat!!.image, pictureSize = 400)
+            val textModifier = modifier.padding(top = 5.dp)
+            Text(
+                modifier = textModifier,
+                text = cat!!.name,
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp
+            )
+            Text(modifier = textModifier, text = cat!!.description)
+            Text(modifier = textModifier, text = "Origin: ${cat!!.origin}")
+            Text(modifier = textModifier, text = "Life span: ${cat!!.lifeSpan}")
+            Text(modifier = textModifier, text = "Temperament: ${cat!!.temperament}")
         }
     }
 }
