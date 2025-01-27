@@ -27,6 +27,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,6 +46,7 @@ import coil3.request.crossfade
 import com.abbas.cats.R
 import com.abbas.cats.usecase.Result
 import com.abbas.cats.usecase.presentationmodel.Cat
+import kotlinx.coroutines.launch
 
 @Composable
 fun CatsScreen(
@@ -54,6 +56,7 @@ fun CatsScreen(
 
     val viewModel = hiltViewModel<MainViewModel>()
     val data by viewModel.catsDataStateFlow.collectAsStateWithLifecycle()
+    val coroutineScope = rememberCoroutineScope()
 
     val listState = rememberLazyListState()
 
@@ -69,7 +72,12 @@ fun CatsScreen(
         is Result.Success -> {
             CatsLazyColumn(
                 cats = (data as Result.Success).data,
-                listState = listState
+                listState = listState,
+                onLikeClick = { id, like ->
+                    coroutineScope.launch {
+                        viewModel.toggleFavorite(id, like)
+                    }
+                }
             ) { it ->
                 viewModel.clickOnCatItem(cat = it)
                 navController.navigate("detail")
@@ -81,7 +89,12 @@ fun CatsScreen(
                 if (!viewModel.isCacheEmpty()) {
                     CatsLazyColumn(
                         cats = viewModel.oldData,
-                        listState = listState
+                        listState = listState,
+                        onLikeClick = { id, like ->
+                            coroutineScope.launch {
+                                viewModel.toggleFavorite(id, like)
+                            }
+                        }
                     ) { it ->
                         viewModel.clickOnCatItem(cat = it)
                         navController.navigate("detail")
@@ -114,6 +127,7 @@ fun CatsLazyColumn(
     modifier: Modifier = Modifier,
     cats: List<Cat>,
     listState: LazyListState,
+    onLikeClick: (String, Boolean) -> Unit,
     onItemClick: (Cat) -> Unit
 ) {
     LazyColumn(
@@ -122,7 +136,7 @@ fun CatsLazyColumn(
         state = listState
     ) {
         items(cats, key = { cat -> cat.id }) { cat ->
-            CatItemCard(cat = cat) {
+            CatItemCard(cat = cat, onLikeClick = { id, like -> onLikeClick(id, like)}) {
                 onItemClick(cat)
             }
         }
@@ -130,7 +144,7 @@ fun CatsLazyColumn(
 }
 
 @Composable
-fun CatItemCard(modifier: Modifier = Modifier, cat: Cat, onItemClick: () -> Unit) {
+fun CatItemCard(modifier: Modifier = Modifier, cat: Cat, onLikeClick: (String, Boolean) -> Unit, onItemClick: () -> Unit) {
     Card(
         modifier = modifier
             .padding(10.dp)
@@ -144,7 +158,7 @@ fun CatItemCard(modifier: Modifier = Modifier, cat: Cat, onItemClick: () -> Unit
                 modifier = modifier
                     .align(Alignment.BottomEnd)
             ) {
-
+                onLikeClick(cat.id, it)
             }
         }
         Text(
@@ -158,14 +172,14 @@ fun CatItemCard(modifier: Modifier = Modifier, cat: Cat, onItemClick: () -> Unit
 }
 
 @Composable
-fun LikeIcon(modifier: Modifier = Modifier, onLikeClick: () -> Unit) {
+fun LikeIcon(modifier: Modifier = Modifier, onLikeClick: (Boolean) -> Unit) {
     var isLike by remember { mutableStateOf(false) }
     val likeImage =
         if (isLike) painterResource(R.drawable.ic_like) else painterResource(R.drawable.ic_dislike)
     IconButton(
         modifier = modifier,
         onClick = {
-            onLikeClick()
+            onLikeClick(isLike)
             isLike = !isLike
         },
     ) {

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.abbas.cats.usecase.GetCatsUseCase
 import com.abbas.cats.usecase.Result
+import com.abbas.cats.usecase.SelectFavoriteUseCase
 import com.abbas.cats.usecase.presentationmodel.Cat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -13,7 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val getCatsUseCase: GetCatsUseCase
+    private val getCatsUseCase: GetCatsUseCase,
+    private val selectFavoriteUseCase: SelectFavoriteUseCase
 ): ViewModel() {
     companion object RequestConfig {
         const val LIMIT = 10
@@ -68,5 +70,11 @@ class MainViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    suspend fun toggleFavorite(id: String, isFavorite: Boolean) {
+        selectFavoriteUseCase.execute(SelectFavoriteUseCase.Request(
+            id = id, isFavorite = isFavorite
+        ))
     }
 }
