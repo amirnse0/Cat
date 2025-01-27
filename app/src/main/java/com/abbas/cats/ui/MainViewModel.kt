@@ -16,7 +16,7 @@ class MainViewModel @Inject constructor(
     private val getCatsUseCase: GetCatsUseCase
 ): ViewModel() {
     companion object RequestConfig {
-        const val LIMIT = 5
+        const val LIMIT = 10
         const val CONTAINS_BREED = true
     }
 
