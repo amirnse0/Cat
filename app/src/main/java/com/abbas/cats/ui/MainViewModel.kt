@@ -6,6 +6,7 @@ import com.abbas.cats.usecase.GetCatsUseCase
 import com.abbas.cats.usecase.Result
 import com.abbas.cats.usecase.presentationmodel.Cat
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,12 +16,18 @@ class MainViewModel @Inject constructor(
     private val getCatsUseCase: GetCatsUseCase
 ): ViewModel() {
     companion object RequestConfig {
-        const val LIMIT = 20
+        const val LIMIT = 5
         const val CONTAINS_BREED = true
     }
 
+    private var page = 0
+    val oldData = mutableListOf<Cat>()
+        get() = field
+
+    fun isCacheEmpty() = oldData.size == 0
+
     init {
-        getCats(1)
+        getCats()
     }
 
     private val _catsDataStateFlow: MutableStateFlow<Result<List<Cat>>> = MutableStateFlow(Result.Loading)
@@ -35,8 +42,11 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun getCats(page: Int) {
+    fun getCats() {
         viewModelScope.launch {
+            if (page > 0) {
+                _catsDataStateFlow.emit(Result.Loading)
+            }
             getCatsUseCase.execute(GetCatsUseCase.Request(
                 page = page,
                 limit = LIMIT,
@@ -44,7 +54,10 @@ class MainViewModel @Inject constructor(
             )).collect{
                 when(it) {
                     is Result.Success -> {
-                        _catsDataStateFlow.emit(Result.Success(it.data.data))
+                        oldData.addAll(it.data.data)
+                        delay(500)
+                        _catsDataStateFlow.emit(Result.Success(oldData))
+                        page++
                     }
                     is Result.Error -> {
                         _catsDataStateFlow.emit(Result.Error(it.throwable))

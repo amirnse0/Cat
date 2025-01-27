@@ -1,6 +1,7 @@
 package com.abbas.cats.ui
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,7 +20,10 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -48,6 +52,14 @@ fun CatsScreen(
 
     val listState = rememberLazyListState()
 
+    val reachedBottom: Boolean by remember {
+        derivedStateOf { listState.reachedBottom() }
+    }
+
+    LaunchedEffect(reachedBottom) {
+        if (reachedBottom) viewModel.getCats()
+    }
+
     when (data) {
         is Result.Success -> {
             CatsLazyColumn(
@@ -60,13 +72,25 @@ fun CatsScreen(
         }
 
         Result.Loading -> {
-            LinearProgressIndicator(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .wrapContentWidth(Alignment.CenterHorizontally)
-                    .height(5.dp)
-                    .width(400.dp)
-            )
+            Box{
+                if (!viewModel.isCacheEmpty()) {
+                    CatsLazyColumn(
+                        cats = viewModel.oldData,
+                        listState = listState
+                    ) { it ->
+                        viewModel.clickOnCatItem(cat = it)
+                        navController.navigate("detail")
+                    }
+                }
+                LinearProgressIndicator(
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .wrapContentWidth(Alignment.CenterHorizontally)
+                        .align(Alignment.BottomCenter)
+                        .height(5.dp)
+                        .width(400.dp)
+                )
+            }
         }
 
         else -> {
@@ -136,4 +160,9 @@ fun CatPicture(modifier: Modifier = Modifier, image: String, pictureSize: Int = 
         contentDescription = null,
         contentScale = ContentScale.Crop
     )
+}
+
+fun LazyListState.reachedBottom(buffer: Int = 1): Boolean {
+    val lastVisibleItem = this.layoutInfo.visibleItemsInfo.lastOrNull()
+    return lastVisibleItem?.index != 0 && lastVisibleItem?.index == this.layoutInfo.totalItemsCount - buffer
 }

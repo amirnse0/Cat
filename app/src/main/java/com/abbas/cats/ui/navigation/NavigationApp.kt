@@ -19,6 +19,7 @@ fun NavigationApp(modifier: Modifier) {
     NavHost(navController = navController, startDestination = home) {
         composable(home) {
             CatsScreen(
+                modifier = modifier,
                 navController = navController
             )
         }
