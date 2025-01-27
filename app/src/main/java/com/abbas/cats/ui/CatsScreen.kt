@@ -1,5 +1,6 @@
 package com.abbas.cats.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,18 +18,22 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -72,7 +77,7 @@ fun CatsScreen(
         }
 
         Result.Loading -> {
-            Box{
+            Box {
                 if (!viewModel.isCacheEmpty()) {
                     CatsLazyColumn(
                         cats = viewModel.oldData,
@@ -133,13 +138,42 @@ fun CatItemCard(modifier: Modifier = Modifier, cat: Cat, onItemClick: () -> Unit
         shape = RoundedCornerShape(16.dp),
         onClick = { onItemClick() }
     ) {
-        CatPicture(image = cat.image)
+        Box {
+            CatPicture(image = cat.image)
+            LikeIcon(
+                modifier = modifier
+                    .align(Alignment.BottomEnd)
+            ) {
+
+            }
+        }
         Text(
             modifier = modifier
                 .fillMaxWidth()
                 .wrapContentWidth(Alignment.CenterHorizontally)
                 .padding(10.dp),
             text = cat.name
+        )
+    }
+}
+
+@Composable
+fun LikeIcon(modifier: Modifier = Modifier, onLikeClick: () -> Unit) {
+    var isLike by remember { mutableStateOf(false) }
+    val likeImage =
+        if (isLike) painterResource(R.drawable.ic_like) else painterResource(R.drawable.ic_dislike)
+    IconButton(
+        modifier = modifier,
+        onClick = {
+            onLikeClick()
+            isLike = !isLike
+        },
+    ) {
+        Image(
+            modifier = modifier
+                .padding(5.dp),
+            painter = likeImage,
+            contentDescription = null
         )
     }
 }
