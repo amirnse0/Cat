@@ -77,6 +77,9 @@ dependencies {
     implementation(libs.coil.svg)
     implementation(libs.coil3)
     implementation(libs.coil3.network.okhttp)
+
+    //navigation
+    implementation(libs.androidx.hilt.navigation.compose)
 }
 
 hilt {
