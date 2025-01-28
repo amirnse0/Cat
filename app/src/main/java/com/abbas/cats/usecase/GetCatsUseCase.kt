@@ -23,6 +23,6 @@ class GetCatsUseCase @Inject constructor(
 
     override suspend fun process(request: Request): Flow<Response> {
         return catsRepository.getCats(request.page, request.limit, request.containsBreed)
-            .map { Response(it.map { cat -> CatConverter.convertPresentationCat(cat) }) }
+            .map { Response(it) }
     }
 }

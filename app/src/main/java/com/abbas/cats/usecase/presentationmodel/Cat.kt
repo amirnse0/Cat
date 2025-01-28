@@ -7,5 +7,6 @@ data class Cat(
     val origin: String,
     val temperament: String,
     val lifeSpan: String,
-    val image: String
+    val image: String,
+    var isFavorite: Boolean = false
 )

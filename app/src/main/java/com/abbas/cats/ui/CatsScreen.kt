@@ -156,7 +156,8 @@ fun CatItemCard(modifier: Modifier = Modifier, cat: Cat, onLikeClick: (String, B
             CatPicture(image = cat.image)
             LikeIcon(
                 modifier = modifier
-                    .align(Alignment.BottomEnd)
+                    .align(Alignment.BottomEnd),
+                isLike = cat.isFavorite
             ) {
                 onLikeClick(cat.id, it)
             }
@@ -172,15 +173,13 @@ fun CatItemCard(modifier: Modifier = Modifier, cat: Cat, onLikeClick: (String, B
 }
 
 @Composable
-fun LikeIcon(modifier: Modifier = Modifier, onLikeClick: (Boolean) -> Unit) {
-    var isLike by remember { mutableStateOf(false) }
+fun LikeIcon(modifier: Modifier = Modifier, isLike: Boolean, onLikeClick: (Boolean) -> Unit) {
     val likeImage =
         if (isLike) painterResource(R.drawable.ic_like) else painterResource(R.drawable.ic_dislike)
     IconButton(
         modifier = modifier,
         onClick = {
             onLikeClick(!isLike)
-            isLike = !isLike
         },
     ) {
         Image(

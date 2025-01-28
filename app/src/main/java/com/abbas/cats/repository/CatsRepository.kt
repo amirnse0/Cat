@@ -1,7 +1,7 @@
 package com.abbas.cats.repository
 
 import com.abbas.cats.data.local.FavoriteItem
-import com.abbas.cats.data.remote.model.CatResponse
+import com.abbas.cats.usecase.presentationmodel.Cat
 import kotlinx.coroutines.flow.Flow
 
 interface CatsRepository {
@@ -9,11 +9,13 @@ interface CatsRepository {
         page: Int,
         limit: Int,
         containsBreed: Boolean
-    ): Flow<List<CatResponse>>
+    ): Flow<List<Cat>>
 
     suspend fun selectAsFavorite(
         favoriteItem: FavoriteItem
     )
 
     suspend fun deleteFromFavorites(favoriteItem: FavoriteItem)
+
+    fun getFavoriteItems(): Flow<List<FavoriteItem>>
 }
