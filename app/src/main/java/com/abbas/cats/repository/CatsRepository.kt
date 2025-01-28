@@ -18,4 +18,6 @@ interface CatsRepository {
     suspend fun deleteFromFavorites(favoriteItem: FavoriteItem)
 
     fun getFavoriteItems(): Flow<List<FavoriteItem>>
+
+    suspend fun isItemFavorite(id: String): Boolean
 }

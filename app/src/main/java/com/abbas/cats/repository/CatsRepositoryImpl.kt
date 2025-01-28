@@ -14,15 +14,16 @@ class CatsRepositoryImpl(
     private val favoriteItemLocalDataSource: FavoriteItemLocalDataSource
 ) : CatsRepository {
 
-    private fun getCatsFromServer(page: Int, limit: Int, containsBreed: Boolean): Flow<List<Cat>> = flow {
-        val data = catsRemoteDataSource.getCats(
-            page = page,
-            limit = limit,
-            containsBreeds = containsBreed
-        )
-        val cats = data.map { CatConverter.convertPresentationCat(it) }
-        emit(cats)
-    }
+    private fun getCatsFromServer(page: Int, limit: Int, containsBreed: Boolean): Flow<List<Cat>> =
+        flow {
+            val data = catsRemoteDataSource.getCats(
+                page = page,
+                limit = limit,
+                containsBreeds = containsBreed
+            )
+            val cats = data.map { CatConverter.convertPresentationCat(it) }
+            emit(cats)
+        }
 
     private fun getFavoritesFromLocal(): Flow<List<FavoriteItem>> =
         favoriteItemLocalDataSource.getFavoriteItems()
@@ -31,7 +32,7 @@ class CatsRepositoryImpl(
         catsFlow: Flow<List<Cat>>,
         favoriteFlow: Flow<List<FavoriteItem>>
     ): Flow<List<Cat>> {
-        return catsFlow.combine(favoriteFlow){ cats, favorites ->
+        return catsFlow.combine(favoriteFlow) { cats, favorites ->
             val favoriteMap = favorites.associateBy { it.id }
             cats.map { cat ->
                 Cat(
@@ -64,4 +65,7 @@ class CatsRepositoryImpl(
 
     override fun getFavoriteItems(): Flow<List<FavoriteItem>> =
         favoriteItemLocalDataSource.getFavoriteItems()
+
+    override suspend fun isItemFavorite(id: String): Boolean =
+        favoriteItemLocalDataSource.isItemFavorite(id)
 }

@@ -16,4 +16,7 @@ class FavoriteItemLocalDataSourceImpl @Inject constructor(
     override suspend fun deleteFromFavorites(favoriteItem: FavoriteItem) {
         catFavoriteDao.deleteFromFavorites(favoriteItem)
     }
+
+    override suspend fun isItemFavorite(id: String): Boolean =
+        catFavoriteDao.getFavoriteId(id).isNullOrBlank()
 }

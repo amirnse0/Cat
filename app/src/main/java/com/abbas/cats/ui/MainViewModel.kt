@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.abbas.cats.usecase.DeleteFavoriteUseCase
 import com.abbas.cats.usecase.GetCatsUseCase
+import com.abbas.cats.usecase.IsItemFavoriteUseCase
 import com.abbas.cats.usecase.Result
 import com.abbas.cats.usecase.SelectFavoriteUseCase
 import com.abbas.cats.usecase.presentationmodel.Cat
@@ -17,7 +18,8 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val getCatsUseCase: GetCatsUseCase,
     private val selectFavoriteUseCase: SelectFavoriteUseCase,
-    private val deleteFavoriteUseCase: DeleteFavoriteUseCase
+    private val deleteFavoriteUseCase: DeleteFavoriteUseCase,
+    private val isItemFavoriteUseCase: IsItemFavoriteUseCase
 ): ViewModel() {
     companion object RequestConfig {
         const val LIMIT = 10

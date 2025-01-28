@@ -6,4 +6,5 @@ interface FavoriteItemLocalDataSource {
     suspend fun addFavoriteItem(favoriteItem: FavoriteItem)
     fun getFavoriteItems(): Flow<List<FavoriteItem>>
     suspend fun deleteFromFavorites(favoriteItem: FavoriteItem)
+    suspend fun isItemFavorite(id: String): Boolean
 }
