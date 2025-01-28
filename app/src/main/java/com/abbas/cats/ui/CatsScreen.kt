@@ -56,7 +56,6 @@ fun CatsScreen(
 
     val viewModel = hiltViewModel<MainViewModel>()
     val data by viewModel.catsDataStateFlow.collectAsStateWithLifecycle()
-    val coroutineScope = rememberCoroutineScope()
 
     val listState = rememberLazyListState()
 
@@ -72,12 +71,7 @@ fun CatsScreen(
         is Result.Success -> {
             CatsLazyColumn(
                 cats = (data as Result.Success).data,
-                listState = listState,
-                onLikeClick = { id, like ->
-                    coroutineScope.launch {
-                        viewModel.toggleFavorite(id, like)
-                    }
-                }
+                listState = listState
             ) { it ->
                 viewModel.clickOnCatItem(cat = it)
                 navController.navigate("detail")
@@ -89,12 +83,7 @@ fun CatsScreen(
                 if (!viewModel.isCacheEmpty()) {
                     CatsLazyColumn(
                         cats = viewModel.oldData,
-                        listState = listState,
-                        onLikeClick = { id, like ->
-                            coroutineScope.launch {
-                                viewModel.toggleFavorite(id, like)
-                            }
-                        }
+                        listState = listState
                     ) { it ->
                         viewModel.clickOnCatItem(cat = it)
                         navController.navigate("detail")
@@ -127,7 +116,6 @@ fun CatsLazyColumn(
     modifier: Modifier = Modifier,
     cats: List<Cat>,
     listState: LazyListState,
-    onLikeClick: (String, Boolean) -> Unit,
     onItemClick: (Cat) -> Unit
 ) {
     LazyColumn(
@@ -136,7 +124,7 @@ fun CatsLazyColumn(
         state = listState
     ) {
         items(cats, key = { cat -> cat.id }) { cat ->
-            CatItemCard(cat = cat, onLikeClick = { id, like -> onLikeClick(id, like)}) {
+            CatItemCard(cat = cat) {
                 onItemClick(cat)
             }
         }
@@ -144,7 +132,7 @@ fun CatsLazyColumn(
 }
 
 @Composable
-fun CatItemCard(modifier: Modifier = Modifier, cat: Cat, onLikeClick: (String, Boolean) -> Unit, onItemClick: () -> Unit) {
+fun CatItemCard(modifier: Modifier = Modifier, cat: Cat, onItemClick: () -> Unit) {
     Card(
         modifier = modifier
             .padding(10.dp)
@@ -154,13 +142,6 @@ fun CatItemCard(modifier: Modifier = Modifier, cat: Cat, onLikeClick: (String, B
     ) {
         Box {
             CatPicture(image = cat.image)
-            LikeIcon(
-                modifier = modifier
-                    .align(Alignment.BottomEnd),
-                isLike = cat.isFavorite
-            ) {
-                onLikeClick(cat.id, it)
-            }
         }
         Text(
             modifier = modifier
@@ -168,25 +149,6 @@ fun CatItemCard(modifier: Modifier = Modifier, cat: Cat, onLikeClick: (String, B
                 .wrapContentWidth(Alignment.CenterHorizontally)
                 .padding(10.dp),
             text = cat.name
-        )
-    }
-}
-
-@Composable
-fun LikeIcon(modifier: Modifier = Modifier, isLike: Boolean, onLikeClick: (Boolean) -> Unit) {
-    val likeImage =
-        if (isLike) painterResource(R.drawable.ic_like) else painterResource(R.drawable.ic_dislike)
-    IconButton(
-        modifier = modifier,
-        onClick = {
-            onLikeClick(!isLike)
-        },
-    ) {
-        Image(
-            modifier = modifier
-                .padding(5.dp),
-            painter = likeImage,
-            contentDescription = null
         )
     }
 }

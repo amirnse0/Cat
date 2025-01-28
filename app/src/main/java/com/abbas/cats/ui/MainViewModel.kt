@@ -20,7 +20,7 @@ class MainViewModel @Inject constructor(
     private val selectFavoriteUseCase: SelectFavoriteUseCase,
     private val deleteFavoriteUseCase: DeleteFavoriteUseCase,
     private val isItemFavoriteUseCase: IsItemFavoriteUseCase
-): ViewModel() {
+) : ViewModel() {
     companion object RequestConfig {
         const val LIMIT = 10
         const val CONTAINS_BREED = true
@@ -36,14 +36,19 @@ class MainViewModel @Inject constructor(
         getCats()
     }
 
-    private val _catsDataStateFlow: MutableStateFlow<Result<List<Cat>>> = MutableStateFlow(Result.Loading)
+    private val _catsDataStateFlow: MutableStateFlow<Result<List<Cat>>> =
+        MutableStateFlow(Result.Loading)
     val catsDataStateFlow = _catsDataStateFlow
 
     private val _catSelectedItemStateFlow: MutableStateFlow<Cat?> = MutableStateFlow(null)
     val catSelectedItemStateFlow = _catSelectedItemStateFlow
 
+    private val _isFavoriteStateFlow: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val isFavoriteStateFlow = _isFavoriteStateFlow
+
     fun clickOnCatItem(cat: Cat) {
         viewModelScope.launch {
+            applyFavoriteOnCat()
             _catSelectedItemStateFlow.emit(cat)
         }
     }
@@ -53,21 +58,23 @@ class MainViewModel @Inject constructor(
             if (page > 0) {
                 _catsDataStateFlow.emit(Result.Loading)
             }
-            getCatsUseCase.execute(GetCatsUseCase.Request(
-                page = page,
-                limit = LIMIT,
-                containsBreed = CONTAINS_BREED
-            )).collect{
-                when(it) {
+            getCatsUseCase.execute(
+                GetCatsUseCase.Request(
+                    page = page, limit = LIMIT, containsBreed = CONTAINS_BREED
+                )
+            ).collect {
+                when (it) {
                     is Result.Success -> {
                         oldData.addAll(it.data.data)
                         delay(500)
                         _catsDataStateFlow.emit(Result.Success(oldData))
                         page++
                     }
+
                     is Result.Error -> {
                         _catsDataStateFlow.emit(Result.Error(it.throwable))
                     }
+
                     else -> {
 
                     }
@@ -76,10 +83,19 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    suspend fun applyFavoriteOnCat() {
+        val currentCat: Cat? = _catSelectedItemStateFlow.value
+        val isFavorite = isItemFavoriteUseCase.doOneShot(id = currentCat?.id ?: "")
+        _isFavoriteStateFlow.emit(isFavorite)
+    }
+
     suspend fun toggleFavorite(id: String, isFavorite: Boolean) {
-        if (isFavorite) selectFavoriteUseCase.execute(SelectFavoriteUseCase.Request(
-            id = id
-        ))
+        if (isFavorite) selectFavoriteUseCase.execute(
+            SelectFavoriteUseCase.Request(
+                id = id
+            )
+        )
         else deleteFavoriteUseCase.execute(DeleteFavoriteUseCase.Request(id))
+        applyFavoriteOnCat()
     }
 }

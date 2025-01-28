@@ -18,5 +18,5 @@ class FavoriteItemLocalDataSourceImpl @Inject constructor(
     }
 
     override suspend fun isItemFavorite(id: String): Boolean =
-        catFavoriteDao.getFavoriteId(id).isNullOrBlank()
+        !catFavoriteDao.getFavoriteId(id).isNullOrBlank()
 }

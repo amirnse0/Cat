@@ -18,7 +18,7 @@ interface CatFavoriteDao {
     @Delete
     suspend fun deleteFromFavorites(favoriteItem: FavoriteItem)
 
-    @Query("SELECT id FROM favorite_item WHERE :id = id")
+    @Query("SELECT * FROM favorite_item WHERE :id == id")
     suspend fun getFavoriteId(id: String): String?
 
 }
