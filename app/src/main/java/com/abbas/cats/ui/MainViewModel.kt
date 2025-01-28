@@ -48,8 +48,8 @@ class MainViewModel @Inject constructor(
 
     fun clickOnCatItem(cat: Cat) {
         viewModelScope.launch {
-            applyFavoriteOnCat()
             _catSelectedItemStateFlow.emit(cat)
+            applyFavoriteOnCat()
         }
     }
 
