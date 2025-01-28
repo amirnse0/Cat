@@ -7,16 +7,16 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import javax.inject.Inject
 
-class SelectFavoriteUseCase @Inject constructor(
+class DeleteFavoriteUseCase @Inject constructor(
     private val catsRepository: CatsRepository
-): UseCase<SelectFavoriteUseCase.Request, SelectFavoriteUseCase.Response>(
+): UseCase<DeleteFavoriteUseCase.Request, DeleteFavoriteUseCase.Response>(
     Configuration(Dispatchers.IO)
 ){
     data class Request(val id: String): UseCase.Request
     class Response: UseCase.Response
 
     override suspend fun process(request: Request): Flow<Nothing> {
-        catsRepository.selectAsFavorite(FavoriteItem(request.id))
+        catsRepository.deleteFromFavorites(FavoriteItem(request.id))
         return emptyFlow()
     }
 }

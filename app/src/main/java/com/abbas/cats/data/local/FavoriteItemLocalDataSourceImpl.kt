@@ -12,4 +12,8 @@ class FavoriteItemLocalDataSourceImpl @Inject constructor(
 
     override fun getFavoriteItems(): Flow<List<FavoriteItem>> =
         catFavoriteDao.getAllFavoriteItems()
+
+    override suspend fun deleteFromFavorites(favoriteItem: FavoriteItem) {
+        catFavoriteDao.deleteFromFavorites(favoriteItem)
+    }
 }

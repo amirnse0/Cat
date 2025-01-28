@@ -2,6 +2,7 @@ package com.abbas.cats.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.abbas.cats.usecase.DeleteFavoriteUseCase
 import com.abbas.cats.usecase.GetCatsUseCase
 import com.abbas.cats.usecase.Result
 import com.abbas.cats.usecase.SelectFavoriteUseCase
@@ -15,7 +16,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val getCatsUseCase: GetCatsUseCase,
-    private val selectFavoriteUseCase: SelectFavoriteUseCase
+    private val selectFavoriteUseCase: SelectFavoriteUseCase,
+    private val deleteFavoriteUseCase: DeleteFavoriteUseCase
 ): ViewModel() {
     companion object RequestConfig {
         const val LIMIT = 10
@@ -73,8 +75,9 @@ class MainViewModel @Inject constructor(
     }
 
     suspend fun toggleFavorite(id: String, isFavorite: Boolean) {
-        selectFavoriteUseCase.execute(SelectFavoriteUseCase.Request(
-            id = id, isFavorite = isFavorite
+        if (isFavorite) selectFavoriteUseCase.execute(SelectFavoriteUseCase.Request(
+            id = id
         ))
+        else deleteFavoriteUseCase.execute(DeleteFavoriteUseCase.Request(id))
     }
 }

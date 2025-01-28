@@ -23,4 +23,8 @@ class CatsRepositoryImpl(
     override suspend fun selectAsFavorite(favoriteItem: FavoriteItem) {
         favoriteItemLocalDataSource.addFavoriteItem(favoriteItem)
     }
+
+    override suspend fun deleteFromFavorites(favoriteItem: FavoriteItem) {
+        favoriteItemLocalDataSource.deleteFromFavorites(favoriteItem)
+    }
 }

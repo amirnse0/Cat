@@ -179,7 +179,7 @@ fun LikeIcon(modifier: Modifier = Modifier, onLikeClick: (Boolean) -> Unit) {
     IconButton(
         modifier = modifier,
         onClick = {
-            onLikeClick(isLike)
+            onLikeClick(!isLike)
             isLike = !isLike
         },
     ) {

@@ -14,4 +14,6 @@ interface CatsRepository {
     suspend fun selectAsFavorite(
         favoriteItem: FavoriteItem
     )
+
+    suspend fun deleteFromFavorites(favoriteItem: FavoriteItem)
 }

@@ -1,6 +1,7 @@
 package com.abbas.cats.data.local
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -13,5 +14,8 @@ interface CatFavoriteDao {
 
     @Query("SELECT * FROM favorite_item")
     fun getAllFavoriteItems(): Flow<List<FavoriteItem>>
+
+    @Delete
+    suspend fun deleteFromFavorites(favoriteItem: FavoriteItem)
 
 }

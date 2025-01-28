@@ -7,7 +7,5 @@ import androidx.room.ColumnInfo as CI
 @Entity(tableName = "favorite_item")
 data class FavoriteItem(
     @PrimaryKey
-    val id: String,
-    @CI(name = "is_favorite")
-    var isFavorite: Boolean
+    val id: String
 )
